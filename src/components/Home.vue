@@ -7,7 +7,7 @@
         <ul>
           <li v-for="(task, index) in tasks" :key="index" class="flex justify-between mb-2 items-center">
             <button class="border border-black p-1 w-48" @click="showSingleInput(index)">{{ task.title }}</button>
-            <button class="bg-red-600 text-white p-1" @click="deleteTask(index)">Delete</button>
+            <button class="red-button" @click="deleteTask(index)">Delete</button>
           </li>
         </ul>
       </div>
@@ -33,7 +33,10 @@
                   <button :value="list" class="mr-2" :id="index" @click="sortList(index, list)">()</button>
                   <h3>Priority</h3>
                 </div>
-                <h1 v-bind:style="[checked.includes(list) ? {backgroundColor: 'red'} : {}]">{{ list }}</h1>
+                <div class="flex justify-between w-full">
+                  <h1 v-bind:style="[checked.includes(list) ? {backgroundColor: 'red'} : {}]" class="px-2">{{ list }}</h1>
+                  <button class="red-button mr-2" @click="cancelSingleTask(index, list)">Done</button>
+                </div>
               </li>
             </div>
           </ul>
@@ -76,7 +79,6 @@ export default {
   },
 
   watch: {
-
   },
 
   mounted () {
@@ -106,7 +108,10 @@ export default {
       } else {
         var pointer = this.checked.indexOf(list)
         this.checked.splice(pointer, 1)
+        this.tasks[this.show].list.push(list)
+        this.tasks[this.show].list.splice(index, 1)
       }
+      this.saveTasks()
       this.saveSingleTasks()
     },
 
@@ -174,6 +179,14 @@ export default {
     cancelSingle() {
       this.singleClicked = false
       this.newSingleInput = ''
+    },
+
+    cancelSingleTask(index, list) {
+      this.tasks[this.show].list.splice(index, 1)
+      var value = this.checked.indexOf(list)
+      this.checked.splice(value, 1)
+      this.saveSingleTasks()
+      this.saveTasks()
     }
   }
 }
@@ -213,5 +226,12 @@ input:focus {
   background-color: rgba(37, 99, 235, var(--tw-bg-opacity));
   width: 4rem;
   color: white;
+}
+/*bg-red-600 text-white p-1*/
+.red-button {
+  --tw-bg-opacity: 1;
+  background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
+  color: white;  padding: 0.25rem;
+  padding: 0.25rem;
 }
 </style>
