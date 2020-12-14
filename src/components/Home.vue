@@ -24,24 +24,9 @@
             <button @click="cancelSingle" class="blue-button">cancel</button>
           </div>
         </div>
-        <div>
 
-          <ul>
-            <div v-if="this.show !== null || singleClicked == true" class="mt-4">
-              <li v-for="(list, index) in tasks[this.show].list" :key="index" class="flex border border-gray-600 mb-2 items-center">
-                <div class="flex items-center bg-blue-600 p-2 mr-4">
-                  <button :value="list" class="mr-2" :id="index" @click="sortList(index, list)">()</button>
-                  <h3>Priority</h3>
-                </div>
-                <div class="flex justify-between w-full">
-                  <h1 v-bind:style="[checked.includes(list) ? {backgroundColor: 'red'} : {}]" class="px-2">{{ list }}</h1>
-                  <button class="red-button mr-2" @click="cancelSingleTask(index, list)">Done</button>
-                </div>
-              </li>
-            </div>
-          </ul>
 
-        </div>
+
       </div>
 
       <!-- create new task -->
@@ -74,11 +59,14 @@ export default {
       tasks: [{
         title: '',
         list: []
-      }]
+      }],
     }
   },
 
-  watch: {
+  computed : {
+    // priorityTask() {
+    //
+    // }
   },
 
   mounted () {
@@ -156,7 +144,15 @@ export default {
     },
 
     deleteTask(index) {
-      this.tasks.splice(index, 1)
+      if(this.isClicked === false && this.singleClicked === false) {
+        this.tasks.splice(index, 1)
+      } else {
+        this.newTask = ''
+        this.newSingleInput = ''
+        this.isClicked = false
+        this.singleClicked = false
+        this.tasks.splice(index, 1)
+      }
       this.saveTasks()
     },
 
